@@ -1,0 +1,363 @@
+@import "tailwindcss";
+
+/*
+  Portfolio theme: single dark, neon-techy language locked for the whole page.
+  One accent (electric cyan). One radius scale. Mono for labels and numbers.
+*/
+
+:root {
+  color-scheme: dark;
+
+  --bg: #07080b;
+  --bg-elev: #0d0f14;
+  --bg-card: #101319;
+  --text: #e9ebef;
+  --text-dim: #9298a4;
+  --text-faint: #5c626e;
+  --border: rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.16);
+
+  --accent: #3de1ff;
+  --accent-soft: rgba(61, 225, 255, 0.14);
+  --accent-ink: #04141a;
+
+  --violet: #a78bfa;
+  --amber: #fbbf24;
+  --rose: #fb7185;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-elev: var(--bg-elev);
+  --color-bg-card: var(--bg-card);
+  --color-text: var(--text);
+  --color-text-dim: var(--text-dim);
+  --color-text-faint: var(--text-faint);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-ink: var(--accent-ink);
+
+  --font-sans: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, monospace;
+
+  --radius: 14px;
+}
+
+* {
+  border-color: var(--border);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 6rem;
+  overflow-x: hidden;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+/* Fixed film-grain overlay. Never on scrolling containers (GPU repaints). */
+.grain::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.5;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+}
+
+/* Section eyebrow, used rarely (max once per 3 sections). */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.hairline {
+  border-top: 1px solid var(--border);
+}
+
+/* Outlined display type (second hero line). */
+.text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.4px var(--text-dim);
+}
+@media (min-width: 768px) {
+  .text-outline {
+    -webkit-text-stroke-width: 2px;
+  }
+}
+
+/* Soft vignette so a rectangular photo blends into the dark hero. */
+.hero-portrait-mask {
+  -webkit-mask-image: radial-gradient(
+    ellipse 64% 86% at 50% 40%,
+    #000 42%,
+    transparent 78%
+  );
+  mask-image: radial-gradient(
+    ellipse 64% 86% at 50% 40%,
+    #000 42%,
+    transparent 78%
+  );
+}
+
+/* Bottom fade for a cut-out portrait: torso dissolves into the page. */
+.hero-portrait-fade {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0,
+    #000 52%,
+    transparent 90%
+  );
+  mask-image: linear-gradient(to bottom, #000 0, #000 52%, transparent 90%);
+}
+
+.link-underline {
+  background-image: linear-gradient(var(--accent), var(--accent));
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.link-underline:hover {
+  background-size: 100% 1px;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Idle float for the hero portrait, so the scene is never fully static. */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+
+/* Slow breathing glow behind the portrait. */
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 0.75;
+    transform: translateX(-50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1.14);
+  }
+}
+
+/* Expanding ring on the hero arrow badge: a quiet "this is clickable" cue. */
+@keyframes ring {
+  0% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(1.65);
+  }
+}
+
+/* Waving hand on the hero greeting. */
+@keyframes wave {
+  0%,
+  60%,
+  100% {
+    transform: rotate(0deg);
+  }
+  10%,
+  30% {
+    transform: rotate(14deg);
+  }
+  20%,
+  40% {
+    transform: rotate(-8deg);
+  }
+}
+
+/* Sweeping sheen used on section rules and the contact panel edge. */
+@keyframes sheen {
+  0% {
+    background-position: -140% 0;
+  }
+  100% {
+    background-position: 240% 0;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Scroll-driven reveal system.
+
+   Everything here is CSS-only and *fails visible*: with no JavaScript, with
+   reduced motion, or in a browser without scroll-driven animation support, the
+   content simply renders in place. Content reveals must never be able to leave
+   the page blank, so they are deliberately not built on JS in-view triggers.
+
+   Stagger comes from `--i` (item index) shifting each element's animation
+   range, since animation-delay is meaningless on a scroll timeline.
+--------------------------------------------------------------------------- */
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes reveal-in-x {
+  from {
+    opacity: 0;
+    transform: translateX(-14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes reveal-pop {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .reveal,
+    .reveal-x,
+    .reveal-pop {
+      animation: reveal-in linear both;
+      animation-timeline: view();
+      animation-range-start: entry calc(4% + var(--i, 0) * 3%);
+      animation-range-end: cover calc(26% + var(--i, 0) * 3%);
+    }
+    .reveal-x {
+      animation-name: reveal-in-x;
+    }
+    .reveal-pop {
+      animation-name: reveal-pop;
+    }
+  }
+}
+
+/* ---- Split headline pieces -------------------------------------------------
+   `.split-mount` runs once on load (a plain CSS animation, so it works without
+   JS). `.split-view` is scroll-driven. Both fail visible. */
+@keyframes piece-up {
+  from {
+    transform: translateY(110%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+.split-piece {
+  display: inline-flex;
+  overflow: hidden;
+  /* Reserve room so descenders (g, y, p) are not clipped by overflow. */
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+  vertical-align: bottom;
+}
+.split-piece > span {
+  display: inline-block;
+}
+
+/* Generic on-load entrance. `backwards` (not `both`) so the element returns to
+   its normal styles once finished, leaving hover transforms free to work. */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fade-down {
+  from {
+    opacity: 0;
+    transform: translateY(-60px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .fade-up {
+    animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    animation-delay: var(--d, 0s);
+  }
+
+  .fade-down {
+    animation: fade-down 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    animation-delay: var(--d, 0s);
+  }
+
+  .split-mount > .split-piece > span {
+    animation: piece-up 0.75s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    animation-delay: calc(var(--d, 0s) + var(--i, 0) * var(--stagger, 0.045s));
+  }
+
+  @supports (animation-timeline: view()) {
+    .split-view > .split-piece > span {
+      animation: piece-up linear both;
+      animation-timeline: view();
+      animation-range-start: entry calc(8% + var(--i, 0) * 1.5%);
+      animation-range-end: entry calc(60% + var(--i, 0) * 1.5%);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
